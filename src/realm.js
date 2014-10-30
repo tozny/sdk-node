@@ -10,8 +10,8 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
     return new Realm(realmKeyId, realmSecret, inApiUrl);
   }
 
-  var apiUrl = inApiUrl || process.env.API_URL;
-  var send   = _.partial(tozny.sendRequest, apiUrl, realmKeyId, realmSecret);
+  var apiUrl  = inApiUrl || process.env.API_URL;
+  var rawCall = _.partial(tozny.sendRequest, apiUrl, realmKeyId, realmSecret);
 
   /**
    * We have received a sign package and signature
@@ -34,7 +34,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
   }
 
   function checkValidLogin(userId, sessionId, expiresAt) {
-    return send('realm.check_valid_login', {
+    return rawCall('realm.check_valid_login', {
       user_id:    userId,
       session_id: sessionId,
       expires_at: expiresAt
@@ -48,7 +48,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
     if (typeof userId !== 'undefined') {
       params.user_id = userId;
     }
-    return send('realm.question_challenge', params);
+    return rawCall('realm.question_challenge', params);
   }
 
 
@@ -59,7 +59,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @return boolean true if the user is known and there are no errors.
    */
   function userExists(userId) {
-    return send('realm.user_exists', { user_id: userId }).then(function(resp) {
+    return rawCall('realm.user_exists', { user_id: userId }).then(function(resp) {
       if (resp.return === 'true' && typeof resp.user_id !== 'undefined') {
         return true;
       }
@@ -80,7 +80,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @return boolean|int false if the user does not exist, or there was an .
    */
   function userEmailExists(email) {
-    return send('realm.user_exists', { tozny_email: email }).then(function(resp) {
+    return rawCall('realm.user_exists', { tozny_email: email }).then(function(resp) {
       if (resp.return === 'true' && typeof resp.user_id !== 'undefined') {
         return true;
       }
@@ -109,7 +109,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
     if (metadata) {
       params.extra_fields = tozny.toBase64(JSON.stringify(metadata));
     }
-    return send('realm.user_add', params).then(function(resp) {
+    return rawCall('realm.user_add', params).then(function(resp) {
       if (resp.return !== 'ok') {
         return when.reject(resp);
       }
@@ -126,7 +126,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @return array user_id, metadata
    */
   function userGet(userId) {
-    return send('realm.user_get', { user_id: userId }).then(function(resp) {
+    return rawCall('realm.user_get', { user_id: userId }).then(function(resp) {
       if (resp.results) {
         return resp.results;
       }
@@ -137,11 +137,13 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
   }
 
   _.assign(this, {
-    verifyLogin:     verifyLogin,
-    checkSignature:  checkValidLogin,
-    userExists:      userExists,
-    userEmailExists: userEmailExists,
-    userAdd:         userAdd,
-    userGet:         userGet
+    verifyLogin:       verifyLogin,
+    checkSignature:    checkValidLogin,
+    questionChallenge: questionChallenge,
+    userExists:        userExists,
+    userEmailExists:   userEmailExists,
+    userAdd:           userAdd,
+    userGet:           userGet,
+    rawCall:           rawCall
   });
 }
