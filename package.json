@@ -1,0 +1,38 @@
+{
+  "name": "sdk-node",
+  "description": "Library for making API calls to Tozny, with included Connect middleware",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Jesse Hallett <jesse@galois.com>",
+  "homepage": "https://github.com/tozny/sdk-node",
+  "contributors": [
+    "Jesse Hallett <jesse@galois.com>"
+  ],
+  "bugs": {
+    "url": ""
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "request": "^2.47.0",
+    "when": "^3.5.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.9",
+    "gulp-jasmine": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "keywords": [],
+  "repository": "",
+  "licenses": [],
+  "jshintConfig": {
+    "node": true,
+    "laxcomma": true,
+    "undef": true,
+    "unused": true
+  }
+}
