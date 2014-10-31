@@ -22,10 +22,12 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @return mixed the decoded JSON data or FALSE
    */
   function verifyLogin(signedData, signature) {
-    tozny.checkSignature(realmSecret, signature, signedData)
+    return tozny.checkSignature(realmSecret, signature, signedData)
     .then(function(valid) {
+      var decoded;
       if (valid) {
-        return tozny.fromBase64(signedData);
+        decoded = tozny.fromBase64(signedData);
+        return JSON.parse(decoded.toString('utf8'));
       }
       else {
         return when.reject('invalid signature');
@@ -137,6 +139,8 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
   }
 
   _.assign(this, {
+    keyId:             realmKeyId,
+    apiUrl:            apiUrl,
     verifyLogin:       verifyLogin,
     checkSignature:    checkValidLogin,
     questionChallenge: questionChallenge,
@@ -146,4 +150,6 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
     userGet:           userGet,
     rawCall:           rawCall
   });
+
+  Object.freeze(this);
 }

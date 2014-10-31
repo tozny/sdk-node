@@ -1,7 +1,6 @@
 /*jshint boss:true */
 
 var crypto  = require('crypto')
-  , https   = require('https')
   , nodefn  = require('when/node')
   , request = require('request')
   , when    = require('when')

@@ -1,0 +1,23 @@
+html
+  head
+    title Secret Message
+  body
+    p Log in to see the secret message.
+    form#loginform(action='login', method='post')
+      #qr_code_login
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+    script(src=realm.apiUrl + '/interface/javascript/jquery.tozny.js')
+    script.
+      $('#qr_code_login').tozny({
+        'type'              : 'verify',
+        'realm_key_id'      : '#{realm.keyId}',
+        'session_id'        : '#{session_id}',
+        'qr_url'            : '#{qr_url}',
+        'api_url'           : '#{realm.apiUrl}',
+        'loading_image'     : '#{realm.apiUrl}/interface/javascript/images/loading.gif',
+        'login_button_image': '#{realm.apiUrl}/interface/javascript/images/click-to-login-black.jpg',
+        'mobile_url'        : '#{mobile_url}',
+        'form_type'         : 'custom',
+        'form_id'           : 'loginform',
+        'debug'             : true
+      });

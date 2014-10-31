@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Jesse Hallett <jesse@galois.com>",
-  "homepage": "https://github.com/tozny/sdk-node",
+  "homepage": "https://github.com/tozny/API/Client/node",
   "contributors": [
     "Jesse Hallett <jesse@galois.com>"
   ],
@@ -27,7 +27,7 @@
     "node": ">=0.10.0"
   },
   "keywords": [],
-  "repository": "",
+  "repository": "git@github.com:tozny/API.git",
   "licenses": [],
   "jshintConfig": {
     "node": true,

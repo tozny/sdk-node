@@ -1,0 +1,44 @@
+{
+  "name": "secretmessage",
+  "description": "Simple web app that demonstrates use of Tozny for authentication",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Jesse Hallett <jesse@galois.com>",
+  "homepage": "https://github.com/tozny/API/Client/node/examples/messageboard",
+  "contributors": [
+    "Jesse Hallett <jesse@galois.com>"
+  ],
+  "bugs": {
+    "url": ""
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "cookie": "^0.1.2",
+    "express": "^4.10.1",
+    "jade": "^1.7.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "main": "index",
+  "config": {
+    "port": "3000",
+    "message": "You are authenticated - welcome to Tozny!",
+    "api_url": "https://api.tozny.com",
+    "realm_key_id": "sid_79a156a7a3fff",
+    "realm_secret": "44660ad798fce105d41dbf3f8447df250a13af219fa69c1073e1250ba142bb89"
+  },
+  "keywords": [],
+  "repository": "git@github.com:tozny/API.git",
+  "licenses": [],
+  "jshintConfig": {
+    "node": true,
+    "laxcomma": true,
+    "undef": true,
+    "unused": true
+  }
+}
