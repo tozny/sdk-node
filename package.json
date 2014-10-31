@@ -15,7 +15,9 @@
     "test": "gulp test"
   },
   "dependencies": {
+    "formidable": "^1.0.15",
     "lodash": "^2.4.1",
+    "passport-strategy": "^1.0.0",
     "request": "^2.47.0",
     "when": "^3.5.1"
   },

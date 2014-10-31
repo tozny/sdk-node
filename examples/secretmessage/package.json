@@ -16,9 +16,12 @@
   },
   "dependencies": {
     "body-parser": "^1.9.2",
+    "connect-flash": "^0.1.1",
     "express": "^4.10.1",
     "express-session": "^1.9.1",
-    "jade": "^1.7.0"
+    "formidable": "^1.0.15",
+    "jade": "^1.7.0",
+    "passport": "^0.2.1"
   },
   "devDependencies": {},
   "engines": {

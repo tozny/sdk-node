@@ -61,7 +61,7 @@ function checkSignature(secret, signature, message) {
 }
 
 function getNonce() {
-  return nodefn.lift(crypto.randomBytes)(32).then(function(buf) {
+  return nodefn.call(crypto.randomBytes, 32).then(function(buf) {
     return buf.toString('hex');
   });
 }

@@ -2,6 +2,8 @@ html
   head
     title Secret Message
   body
+    each msg in messages
+      p= 'Error: '+ msg
     p Log in to see the secret message.
     form#loginform(action='login', method='post')
       #qr_code_login
