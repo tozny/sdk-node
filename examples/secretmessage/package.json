@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "body-parser": "^1.9.2",
-    "cookie": "^0.1.2",
     "express": "^4.10.1",
+    "express-session": "^1.9.1",
     "jade": "^1.7.0"
   },
   "devDependencies": {},
