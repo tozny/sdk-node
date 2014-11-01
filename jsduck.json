@@ -1,0 +1,13 @@
+{
+  "--title": "Tozny SDK",
+  "--output": "doc",
+  "--external": [
+    "Promise"
+  ],
+  "--": [
+    "realm.js",
+    "user.js",
+    "passport.js",
+    "lib/crypto.js"
+  ]
+}
