@@ -28,13 +28,6 @@
     "node": ">=0.10.0"
   },
   "main": "index",
-  "config": {
-    "port": "3000",
-    "message": "You are authenticated - welcome to Tozny!",
-    "api_url": "https://api.tozny.com",
-    "realm_key_id": "sid_79a156a7a3fff",
-    "realm_secret": "44660ad798fce105d41dbf3f8447df250a13af219fa69c1073e1250ba142bb89"
-  },
   "keywords": [],
   "repository": "git@github.com:tozny/API.git",
   "licenses": [],

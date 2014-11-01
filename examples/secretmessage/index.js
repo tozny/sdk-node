@@ -6,10 +6,15 @@ var express       = require('express')
   , ToznyStrategy = require('tozny-sdk/src/passport')
 ;
 
+if (!process.env.REALM_KEY_ID || !process.env.REALM_SECRET) {
+  console.log('Please set environment variables REALM_KEY_ID and REALM_SECRET.');
+  process.exit(1);
+}
+
 var realm = new Realm(
-  process.env.npm_package_config_realm_key_id,
-  process.env.npm_package_config_realm_secret,
-  process.env.npm_package_config_api_url
+  process.env.REALM_KEY_ID,
+  process.env.REALM_SECRET,
+  process.env.API_URL || "https://api.tozny.com"
 );
 
 passport.use(new ToznyStrategy(realm, { lookupUser: findOrRegister }));
@@ -70,7 +75,7 @@ app.get('/', function(req, res) {
 
 app.get('/secret', ensureAuthenticated, function(req, res) {
   res.render('secret', {
-    message: process.env.npm_package_config_message,
+    message: process.env.SECRET_MESSAGE || "You are authenticated - welcome to Tozny!",
     user:    req.user
   });
 });
@@ -96,7 +101,7 @@ app.post('/logout', function(req, res) {
   res.redirect('/');
 });
 
-var server = app.listen(process.env.npm_package_config_port || 3000, function() {
+var server = app.listen(process.env.PORT || 3000, function() {
   var host = server.address().address;
   var port = server.address().port;
   console.log('secretmessage listening at http://%s:%s', host, port);
