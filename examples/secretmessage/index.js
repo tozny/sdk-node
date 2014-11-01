@@ -1,9 +1,8 @@
-var express       = require('express')
-  , session       = require('express-session')
-  , flash         = require('connect-flash')
-  , passport      = require('passport')
-  , Realm         = require('tozny-sdk/src/realm')
-  , ToznyStrategy = require('tozny-sdk/src/passport')
+var express  = require('express')
+  , session  = require('express-session')
+  , flash    = require('connect-flash')
+  , passport = require('passport')
+  , tozny    = require('tozny')
 ;
 
 if (!process.env.REALM_KEY_ID || !process.env.REALM_SECRET) {
@@ -11,13 +10,13 @@ if (!process.env.REALM_KEY_ID || !process.env.REALM_SECRET) {
   process.exit(1);
 }
 
-var realm = new Realm(
+var realm = new tozny.Realm(
   process.env.REALM_KEY_ID,
   process.env.REALM_SECRET,
   process.env.API_URL || "https://api.tozny.com"
 );
 
-passport.use(new ToznyStrategy(realm, { lookupUser: findOrRegister }));
+passport.use(new tozny.Strategy(realm, { lookupUser: findOrRegister }));
 
 var users = {};
 

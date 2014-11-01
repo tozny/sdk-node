@@ -1,5 +1,4 @@
-var tozny   = require('./crypto')
-  , nodefn  = require('when/node')
+var nodefn  = require('when/node')
   , request = require('request')
   , _       = require('lodash')
 ;

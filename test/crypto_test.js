@@ -1,6 +1,6 @@
-/*global describe it expect */
+/*global describe, it, expect */
 
-var tozny = require('../src/crypto');
+var tozny = require('../lib/crypto');
 
 var REALM_KEY_ID = 'sid_d915e7226947b';
 var SECRET = '8f8c9b8df39f8c8be4a39378bece4ac01cba948f9b4ef7b90acad3f49d5358f2';

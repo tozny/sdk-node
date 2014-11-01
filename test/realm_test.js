@@ -1,6 +1,6 @@
-/*global describe it expect */
+/*global describe, it, expect */
 
-var Realm = require('../src/realm.js');
+var Realm = require('../realm.js');
 
 describe('realm', function() {
 

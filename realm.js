@@ -1,4 +1,4 @@
-var tozny = require('./crypto')
+var tozny = require('./lib/crypto')
   , when  = require('when')
   , _     = require('lodash')
 ;
