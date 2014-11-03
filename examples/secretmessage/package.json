@@ -21,7 +21,8 @@
     "express-session": "^1.9.1",
     "formidable": "^1.0.15",
     "jade": "^1.7.0",
-    "passport": "^0.2.1"
+    "passport": "^0.2.1",
+    "tozny": "*"
   },
   "devDependencies": {},
   "engines": {
