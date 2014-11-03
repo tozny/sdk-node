@@ -1,10 +1,10 @@
 {
   "name": "secretmessage",
   "description": "Simple web app that demonstrates use of Tozny for authentication",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "author": "Jesse Hallett <jesse@galois.com>",
-  "homepage": "https://github.com/tozny/API/Client/node/examples/messageboard",
+  "homepage": "https://github.com/tozny/API/Client/node/examples/secretmessage",
   "contributors": [
     "Jesse Hallett <jesse@galois.com>"
   ],

@@ -1,7 +1,7 @@
 {
   "name": "tozny",
-  "description": "Library for making API calls to Tozny, with included Connect middleware",
-  "version": "0.1.0",
+  "description": "API interface for Tozny, with included Passport strategy for easy integration in Express apps",
+  "version": "1.0.0",
   "private": true,
   "author": "Jesse Hallett <jesse@galois.com>",
   "homepage": "https://github.com/tozny/API/Client/node",
@@ -12,7 +12,8 @@
     "url": ""
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "doc": "gulp doc"
   },
   "dependencies": {
     "formidable": "^1.0.0",
@@ -28,7 +29,15 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "keywords": [],
+  "keywords": [
+    "tozny",
+    "authentication",
+    "security",
+    "sso",
+    "passport",
+    "express",
+    "web"
+  ],
   "repository": "git@github.com:tozny/API.git",
   "licenses": [],
   "jshintConfig": {
