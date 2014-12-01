@@ -1,6 +1,6 @@
 /*global describe, it, expect */
 
-var Realm = require('../realm.js');
+var Realm = require('../lib/realm.js');
 
 describe('realm', function() {
 

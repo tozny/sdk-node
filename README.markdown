@@ -18,7 +18,7 @@ Using Passport, you can add Tozny support to your app by instantiating the Tozny
 strategy:
 
     var passport = require('passport')
-      , tozny    = require('tozny');
+      , tozny    = require('tozny-auth');
 
     var realm = new tozny.Realm(realmKeyId, realmSecret, apiUrl);
     passport.use(new tozny.Strategy(realm));

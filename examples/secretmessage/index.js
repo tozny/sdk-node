@@ -2,7 +2,7 @@ var express  = require('express')
   , session  = require('express-session')
   , flash    = require('connect-flash')
   , passport = require('passport')
-  , tozny    = require('tozny')
+  , tozny    = require('tozny-auth')
 ;
 
 if (!process.env.REALM_KEY_ID || !process.env.REALM_SECRET) {

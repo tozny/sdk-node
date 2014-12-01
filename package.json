@@ -1,19 +1,23 @@
 {
-  "name": "tozny",
-  "description": "API interface for Tozny, with included Passport strategy for easy integration in Express apps",
+  "name": "tozny-auth",
+  "description": "API interface for the Tozny authentication service, with Passport strategy for easy integration in Express apps",
   "version": "1.0.0",
-  "private": true,
   "author": "Jesse Hallett <jesse@galois.com>",
-  "homepage": "https://github.com/tozny/API/Client/node",
+  "homepage": "https://github.com/tozny/sdk-node",
   "contributors": [
     "Jesse Hallett <jesse@galois.com>"
   ],
   "bugs": {
-    "url": ""
+    "url": "https://github.com/tozny/sdk-node/issues"
   },
   "scripts": {
     "test": "gulp test",
     "doc": "gulp doc"
+  },
+  "main": "./lib/tozny-auth.js",
+  "directiories": {
+    "lib": "./lib",
+    "example": "./examples"
   },
   "dependencies": {
     "formidable": "^1.0.0",
@@ -38,8 +42,11 @@
     "express",
     "web"
   ],
-  "repository": "git@github.com:tozny/API.git",
-  "licenses": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tozny/sdk-node.git"
+  },
+  "licenses": ["Apache-2.0"],
   "jshintConfig": {
     "node": true,
     "laxcomma": true,

@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "private": true,
   "author": "Jesse Hallett <jesse@galois.com>",
-  "homepage": "https://github.com/tozny/API/Client/node/examples/secretmessage",
+  "homepage": "https://github.com/tozny/sdk-node/tree/master/examples/secretmessage",
   "contributors": [
     "Jesse Hallett <jesse@galois.com>"
   ],
   "bugs": {
-    "url": ""
+    "url": "https://github.com/tozny/sdk-node/issues"
   },
   "scripts": {
     "start": "node index.js"
@@ -22,7 +22,7 @@
     "formidable": "^1.0.15",
     "jade": "^1.7.0",
     "passport": "^0.2.1",
-    "tozny": "*"
+    "tozny-auth": "*"
   },
   "devDependencies": {},
   "engines": {
@@ -30,8 +30,11 @@
   },
   "main": "index",
   "keywords": [],
-  "repository": "git@github.com:tozny/API.git",
-  "licenses": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tozny/sdk-node.git"
+  },
+  "licenses": ["Apache-2.0"],
   "jshintConfig": {
     "node": true,
     "laxcomma": true,
