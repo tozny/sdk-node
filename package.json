@@ -1,7 +1,7 @@
 {
   "name": "tozny-auth",
   "description": "API interface for the Tozny authentication service, with Passport strategy for easy integration in Express apps",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Jesse Hallett <jesse@galois.com>",
   "homepage": "https://github.com/tozny/sdk-node",
   "contributors": [
@@ -20,11 +20,13 @@
     "example": "./examples"
   },
   "dependencies": {
+    "bluebird": "~3.0.0",
     "formidable": "^1.0.0",
-    "lodash": "^2.0.0",
+    "lodash": "^4.0.0",
     "passport-strategy": "^1.0.0",
-    "request": "^2.0.0",
-    "when": "^3.0.0"
+    "stream-to-promise": "^1.1.0",
+    "superagent": "^1.8.3",
+    "superagent-promise-plugin": "^3.2.0"
   },
   "devDependencies": {
     "gulp": "^3.0.0",
@@ -46,7 +48,9 @@
     "type": "git",
     "url": "https://github.com/tozny/sdk-node.git"
   },
-  "licenses": ["Apache-2.0"],
+  "licenses": [
+    "Apache-2.0"
+  ],
   "jshintConfig": {
     "node": true,
     "laxcomma": true,
