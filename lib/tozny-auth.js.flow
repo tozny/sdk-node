@@ -1,5 +1,5 @@
 /* @flow */
 
-exports.Realm    = require('./realm');
-exports.User     = require('./user');
-exports.Strategy = require('./passport');
+export { default as Realm }    from './realm'
+export { default as User }     from './user'
+export { default as Strategy } from './passport'
