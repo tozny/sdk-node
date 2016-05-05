@@ -4,10 +4,10 @@ import formidable from 'formidable'
 import bluebird   from 'bluebird'
 import util       from 'util'
 import Strategy   from 'passport-strategy'
-import Realm      from './realm'
 
 const promisify = bluebird.promisify;
 
+import typeof Realm from './realm'
 
 /**
  * @class passport
