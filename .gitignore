@@ -1,3 +1,7 @@
+# Only *.js.flow files go into version control
+*.js
+*.js.map
+
 # Logs
 logs
 *.log

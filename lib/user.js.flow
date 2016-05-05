@@ -1,3 +1,5 @@
+/* @flow */
+
 var Promise       = require('bluebird')
   , promisePlugin = require('superagent-promise-plugin')
   , request       = require('superagent')

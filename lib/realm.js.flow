@@ -1,3 +1,5 @@
+/* @flow */
+
 var tozny = require('./crypto')
   , _     = require('lodash')
 ;

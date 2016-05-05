@@ -1,3 +1,4 @@
+/* @flow */
 /*jshint boss:true */
 
 var crypto        = require('crypto')
