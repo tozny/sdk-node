@@ -270,6 +270,23 @@ export default class Realm {
   }
 
   /**
+   * Get list of users in a given realm, optionally filtered by params.
+   *
+   * @param {Object} params
+   * @return {Promise.<Object>}
+   */
+  usersGet(params: UsersGetParams = {}): Promise<UsersGetResults> {
+    return this.rawCall('realm.users_get', params).then(function(resp) {
+      if (resp.results) {
+        return resp.results;
+      }
+      else {
+        return bluebird.reject(resp);
+      }
+    })
+  }
+
+  /**
    * Update a user from the given realm
    *
    * @param {string} userId User id to update by
