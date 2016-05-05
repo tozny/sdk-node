@@ -5,16 +5,6 @@ var tozny    = require('./crypto')
   , _        = require('lodash')
 ;
 
-export type QuestionChallengeResponse = {
-  challenge:    Object,
-  session_id:   string,
-  realm_key_id: string,
-  qr_url:       string,
-  mobile_url:   string,
-  created_at:   string,
-  presence:     string,
-}
-
 /**
  * @class realm
  * @singleton
@@ -32,7 +22,6 @@ export type QuestionChallengeResponse = {
 /**
  * @property {Realm} exports
  */
-module.exports = Realm;
 
 /**
  * @class Realm
@@ -88,18 +77,41 @@ module.exports = Realm;
  *
  * For more information on promises, see
  * [http://www.html5rocks.com/en/tutorials/es6/promises/](http://www.html5rocks.com/en/tutorials/es6/promises/)
- *
- * @constructor
- * @param {string} realmKeyId  This usually begins with `sid_` followed by a hexadecimal string
- * @param {string} realmSecret This is usually a long hexadecimal string
- * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
-  if (!(this instanceof Realm)) {
-    return new Realm(realmKeyId, realmSecret, inApiUrl);
-  }
+export default class Realm {
+  /**
+   * @property {String}
+   * @readonly
+   * Realm key id that was given when this Realm object was constructed
+   */
+  keyId: string;
 
-  var apiUrl  = inApiUrl || process.env.API_URL;
+  /**
+   * @property {String}
+   * @readonly
+   * API URL that was given when this Realm object was constructed.  If no URL
+   * was given then this value is taken from the `API_URL` environment
+   * variable.
+   */
+  apiUrl: string;
+
+  realmSecret: string;
+
+  /**
+   * @constructor
+   * @param {string} realmKeyId  This usually begins with `sid_` followed by a hexadecimal string
+   * @param {string} realmSecret This is usually a long hexadecimal string
+   * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
+   */
+  constructor(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
+    const processApiUrl = typeof process !== 'undefined' && process.env
+      ? process.env.API_URL
+      : undefined
+
+    this.keyId       = realmKeyId
+    this.realmSecret = realmSecret
+    this.apiUrl      = inApiUrl || processApiUrl || 'https://api.tozny.com'
+  }
 
   /**
    * Used to make custom API calls.
@@ -109,7 +121,9 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {Object} [params] Parameters to send.
    * @return {Promise.<Object>} Result depends on the API call that is made
    */
-  var rawCall = _.partial(tozny.sendRequest, apiUrl, realmKeyId, realmSecret);
+  rawCall(method: string, params: Object): Promise<Object> {
+    return tozny.sendRequest(this.apiUrl, this.keyId, this.realmSecret, method, params);
+  }
 
   /**
    * We have received a sign package and signature -
@@ -122,8 +136,8 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * TODO
    *
    */
-  function verifyLogin(signedData, signature) {
-    return tozny.checkSignature(realmSecret, signature, signedData)
+  verifyLogin(signedData: string, signature: string): Promise<Object> {
+    return tozny.checkSignature(this.realmSecret, signature, signedData)
     .then(function(valid) {
       var decoded;
       if (valid) {
@@ -142,8 +156,8 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {Date}   expiresAt
    * @return {Promise.<boolean>} True if login is valid, false otherwise
    */
-  function checkValidLogin(userId, sessionId, expiresAt) {
-    return rawCall('realm.check_valid_login', {
+  checkValidLogin(userId: string, sessionId: string, expiresAt: Date): Promise<boolean> {
+    return this.rawCall('realm.check_valid_login', {
       user_id:    userId,
       session_id: sessionId,
       expires_at: tozny.encodeTime(expiresAt)
@@ -167,14 +181,13 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * - created_at
    * - presence
    */
-  function questionChallenge(question: Object, user_id?: ?string
-                            ): Promise<QuestionChallengeResponse> {
+  questionChallenge(question: Object, user_id?: ?string
+                   ): Promise<QuestionChallengeResponse> {
     const params = typeof user_id !== 'undefined'
       ? { question, user_id }
       : { question }
-    return rawCall('realm.question_challenge', params);
+    return this.rawCall('realm.question_challenge', params);
   }
-
 
   /**
    * Does the given user exist in this realm?
@@ -182,8 +195,8 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {string} userId The user ID of the user we're looking for
    * @return {Promise.<boolean>} Boolean indicating whether the user exists
    */
-  function userExists(userId) {
-    return rawCall('realm.user_exists', { user_id: userId }).then(function(resp) {
+  userExists(userId: string): Promise<boolean> {
+    return this.rawCall('realm.user_exists', { user_id: userId }).then(function(resp) {
       if (resp.return === 'true' && typeof resp.user_id !== 'undefined') {
         return true;
       }
@@ -203,8 +216,8 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param  {string} email The email of the user we're looking for
    * @return {Promise.<boolean>} Boolean indicating whether the user exists
    */
-  function userEmailExists(email) {
-    return rawCall('realm.user_exists', { tozny_email: email }).then(function(resp) {
+  userEmailExists(email: string): Promise<boolean> {
+    return this.rawCall('realm.user_exists', { tozny_email: email }).then(function(resp) {
       if (resp.return === 'true' && typeof resp.user_id !== 'undefined') {
         return true;
       }
@@ -225,11 +238,11 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {Array} [metadata]
    * @return {Promise.<Object>} The Tozny_API_User object if successful, otherwise false.
    */
-  function userAdd(defer: string = "false", metadata: Object[]): Promise<Object> {
+  userAdd(defer: string = "false", metadata: Object[]): Promise<Object> {
     const params = metadata
       ? { defer, extra_fields: tozny.toBase64(JSON.stringify(metadata)) }
       : { defer }
-    return rawCall('realm.user_add', params).then(function(resp) {
+    return this.rawCall('realm.user_add', params).then(function(resp) {
       if (resp.return !== 'ok') {
         return bluebird.reject(resp);
       }
@@ -245,8 +258,8 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {string} userId User id to fetch
    * @return {Promise.<Object>} user_id, metadata
    */
-  function userGet(userId: string): Promise<Object> {
-    return rawCall('realm.user_get', { user_id: userId }).then(function(resp) {
+  userGet(userId: string): Promise<Object> {
+    return this.rawCall('realm.user_get', { user_id: userId }).then(function(resp) {
       if (resp.results) {
         return resp.results;
       }
@@ -262,10 +275,10 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
    * @param {string} userId User id to update by
    * @return {Promise.<Object>} The Tozny_API_User object if successful, otherwise false.
    */
-  function userUpdate(userId, extraFields) {
+  userUpdate(userId: string, extraFields: Object): Promise<Object> {
     var extraFieldsArg = new Buffer(JSON.stringify(extraFields)).toString('base64');
 
-    return rawCall('realm.user_update', { user_id: userId, extra_fields: extraFieldsArg }).then(function(resp) {
+    return this.rawCall('realm.user_update', { user_id: userId, extra_fields: extraFieldsArg }).then(function(resp) {
       if (resp.return !== 'ok') {
         return bluebird.reject(resp);
       }
@@ -274,34 +287,28 @@ function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
       }
     });
   }
-
-  _.assign(this, {
-    /**
-     * @property {String}
-     * @readonly
-     * Realm key id that was given when this Realm object was constructed
-     */
-    keyId:             realmKeyId,
-
-    /**
-     * @property {String}
-     * @readonly
-     * API URL that was given when this Realm object was constructed.  If no URL
-     * was given then this value is taken from the `API_URL` environment
-     * variable.
-     */
-    apiUrl:            apiUrl,
-
-    verifyLogin:       verifyLogin,
-    checkSignature:    checkValidLogin,
-    questionChallenge: questionChallenge,
-    userExists:        userExists,
-    userEmailExists:   userEmailExists,
-    userAdd:           userAdd,
-    userGet:           userGet,
-    userUpdate:        userUpdate,
-    rawCall:           rawCall
-  });
-
-  Object.freeze(this);
 }
+
+type QuestionChallengeResponse = {
+  challenge:    Object,
+  session_id:   string,
+  realm_key_id: string,
+  qr_url:       string,
+  mobile_url:   string,
+  created_at:   string,
+  presence:     string,
+}
+
+type UsersGetParams = {
+  term?:           string,
+  meta_advanced?:  any,
+  meta_fields?:    any,
+  tozny_advanced?: any,
+  tozny_fields?:   any,
+  user_ids?:       any,
+  rows?:           number,
+  offset?:         number,
+  page?:           number,
+}
+
+type UsersGetResults = Object

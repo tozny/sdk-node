@@ -1,12 +1,13 @@
 /* @flow */
 
-var formidable = require('formidable')
-  , bluebird   = require('bluebird')
-  , util       = require('util')
-  , Strategy   = require('passport-strategy')
-  , Realm      = require('./realm')
-;
-var promisify = bluebird.promisify;
+import formidable from 'formidable'
+import bluebird   from 'bluebird'
+import util       from 'util'
+import Strategy   from 'passport-strategy'
+import Realm      from './realm'
+
+const promisify = bluebird.promisify;
+
 
 /**
  * @class passport
