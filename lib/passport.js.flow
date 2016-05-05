@@ -1,11 +1,12 @@
 /* @flow */
 
 var formidable = require('formidable')
-  , Promise    = require('bluebird')
+  , bluebird   = require('bluebird')
   , util       = require('util')
   , Strategy   = require('passport-strategy')
+  , Realm      = require('./realm')
 ;
-var promisify = Promise.promisify;
+var promisify = bluebird.promisify;
 
 /**
  * @class passport
@@ -90,7 +91,7 @@ module.exports = ToznyStrategy;
  * @param {string} [options.signatureField="tozny_signature"] Name of POST
  * parameter that corries login challenge signature
  */
-function ToznyStrategy(realm, opts) {
+function ToznyStrategy(realm: Realm, opts: ToznyStrategyOptions) {
   opts = opts || {};
   this._realm = realm;
   Strategy.call(this);
@@ -102,13 +103,19 @@ function ToznyStrategy(realm, opts) {
 
 util.inherits(ToznyStrategy, Strategy);
 
+export type ToznyStrategyOptions = {
+  lookupUser?:      (_: { user_id: string }) => (Promise<Object>|Object),
+  signedDataField?: string,
+  signatureField?:  string,
+}
+
 ToznyStrategy.prototype.authenticate = function authenticate(req, opts) {
   opts = opts || {};
   var form = new formidable.IncomingForm();
   var self = this;
 
   promisify(form.parse.bind(form))(req).then(function (formData) {
-    var fields     = formdata[0];
+    var fields     = formData[0];
     var signedData = fields[self._signed_data];
     var signature  = fields[self._signature];
 
@@ -121,7 +128,7 @@ ToznyStrategy.prototype.authenticate = function authenticate(req, opts) {
 
     function lookup(login) {
       if (self._lookup) {
-        return Promise.resolve(self._lookup(login));
+        return bluebird.resolve(self._lookup(login));
       }
       else {
         return login;

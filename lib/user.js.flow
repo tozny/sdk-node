@@ -35,7 +35,7 @@ module.exports = User;
  * @param {string} realmKeyId
  * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-function User(realmKeyId, inApiUrl) {
+function User(realmKeyId: string, inApiUrl: string) {
   if (!(this instanceof User)) {
     return new User(realmKeyId, inApiUrl);
   }
@@ -56,7 +56,7 @@ function User(realmKeyId, inApiUrl) {
     if (params) {
       _.assign(req, params);
     }
-    return request.post(url).send(req).use(promisePlugin).then(function(resp) {
+    return request.post(apiUrl).send(req).use(promisePlugin).then(function(resp) {
       return JSON.parse(resp[1]);
     });
   }

@@ -1,8 +1,19 @@
 /* @flow */
 
-var tozny = require('./crypto')
-  , _     = require('lodash')
+var tozny    = require('./crypto')
+  , bluebird = require('bluebird')
+  , _        = require('lodash')
 ;
+
+export type QuestionChallengeResponse = {
+  challenge:    Object,
+  session_id:   string,
+  realm_key_id: string,
+  qr_url:       string,
+  mobile_url:   string,
+  created_at:   string,
+  presence:     string,
+}
 
 /**
  * @class realm
@@ -83,7 +94,7 @@ module.exports = Realm;
  * @param {string} realmSecret This is usually a long hexadecimal string
  * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-function Realm(realmKeyId, realmSecret, inApiUrl) {
+function Realm(realmKeyId: string, realmSecret: string, inApiUrl?: ?string) {
   if (!(this instanceof Realm)) {
     return new Realm(realmKeyId, realmSecret, inApiUrl);
   }
@@ -120,7 +131,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
         return JSON.parse(decoded.toString('utf8'));
       }
       else {
-        return when.reject('invalid signature');
+        return bluebird.reject('invalid signature');
       }
     });
   }
@@ -156,11 +167,11 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * - created_at
    * - presence
    */
-  function questionChallenge(question, userId) {
-    var params = { question: question };
-    if (typeof userId !== 'undefined') {
-      params.user_id = userId;
-    }
+  function questionChallenge(question: Object, user_id?: ?string
+                            ): Promise<QuestionChallengeResponse> {
+    const params = typeof user_id !== 'undefined'
+      ? { question, user_id }
+      : { question }
     return rawCall('realm.question_challenge', params);
   }
 
@@ -180,7 +191,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
         return false;
       }
       else {
-        return when.reject(resp);
+        return bluebird.reject(resp);
       }
     });
   }
@@ -201,7 +212,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
         return false;
       }
       else {
-        return when.reject(resp);
+        return bluebird.reject(resp);
       }
     });
   }
@@ -214,17 +225,13 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @param {Array} [metadata]
    * @return {Promise.<Object>} The Tozny_API_User object if successful, otherwise false.
    */
-  function userAdd(defer, metadata) {
-    if (typeof defer === 'undefined') {
-      defer = 'false';
-    }
-    var params = { defer: defer };
-    if (metadata) {
-      params.extra_fields = tozny.toBase64(JSON.stringify(metadata));
-    }
+  function userAdd(defer: string = "false", metadata: Object[]): Promise<Object> {
+    const params = metadata
+      ? { defer, extra_fields: tozny.toBase64(JSON.stringify(metadata)) }
+      : { defer }
     return rawCall('realm.user_add', params).then(function(resp) {
       if (resp.return !== 'ok') {
-        return when.reject(resp);
+        return bluebird.reject(resp);
       }
       else {
         return resp;  // TODO: Should we pull a user object out of the response?
@@ -238,13 +245,13 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
    * @param {string} userId User id to fetch
    * @return {Promise.<Object>} user_id, metadata
    */
-  function userGet(userId) {
+  function userGet(userId: string): Promise<Object> {
     return rawCall('realm.user_get', { user_id: userId }).then(function(resp) {
       if (resp.results) {
         return resp.results;
       }
       else {
-        return when.reject(resp);
+        return bluebird.reject(resp);
       }
     });
   }
@@ -260,7 +267,7 @@ function Realm(realmKeyId, realmSecret, inApiUrl) {
 
     return rawCall('realm.user_update', { user_id: userId, extra_fields: extraFieldsArg }).then(function(resp) {
       if (resp.return !== 'ok') {
-        return when.reject(resp);
+        return bluebird.reject(resp);
       }
       else {
         return resp;  // TODO: Should we pull a user object out of the response?
