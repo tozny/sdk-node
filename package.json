@@ -12,7 +12,9 @@
   },
   "scripts": {
     "test": "gulp test",
-    "doc": "gulp doc"
+    "doc": "gulp doc",
+    "typecheck": "flow check",
+    "prepublish": "npm run typecheck && make && npm test"
   },
   "main": "./lib/tozny-auth.js",
   "directiories": {
