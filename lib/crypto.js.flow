@@ -2,6 +2,7 @@
 /*jshint boss:true */
 
 var crypto        = require('crypto')
+  , promisePlugin = require('superagent-promise-plugin')
   , bluebird      = require('bluebird')
   , request       = require('superagent')
   , _             = require('lodash')
@@ -15,6 +16,8 @@ exports.fromBase64     = fromBase64;
 exports.toBase64       = toBase64;
 exports.mkRequest      = mkRequest;
 exports.sendRequest    = sendRequest;
+
+promisePlugin.Promise = bluebird;
 
 /**
  * @class crypto
@@ -42,7 +45,7 @@ function sendRequest(apiUrl: string,
                      method: string,
                      params: Object): Promise<Object> {
   return mkRequest(realmKeyId, secret, method, params).then(function(req) {
-    return request.get(apiUrl).query(req).then(resp => resp.body)
+    return request.get(apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
   });
 }
 

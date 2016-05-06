@@ -1,9 +1,12 @@
 /* @flow */
 
-var Promise = require('bluebird')
-  , request = require('superagent')
-  , _       = require('lodash')
+var Promise       = require('bluebird')
+  , promisePlugin = require('superagent-promise-plugin')
+  , request       = require('superagent')
+  , _             = require('lodash')
 ;
+
+promisePlugin.Promise = Promise;
 
 /**
  * @class user
@@ -53,7 +56,7 @@ function User(realmKeyId: string, inApiUrl: string) {
     if (params) {
       _.assign(req, params);
     }
-    return request.post(apiUrl).send(req).then(function(resp) {
+    return request.post(apiUrl).send(req).use(promisePlugin).then(function(resp) {
       return JSON.parse(resp[1]);
     });
   }
