@@ -1,12 +1,11 @@
 /* @flow */
 
-var bluebird      = require('bluebird')
-  , promisePlugin = require('superagent-promise-plugin')
-  , request       = require('superagent')
-  , _             = require('lodash')
-;
+import bluebird      from 'bluebird'
+import promisePlugin from 'superagent-promise-plugin'
+import request       from 'superagent'
+import objectAssign  from 'object-assign'
 
-promisePlugin.Promise = bluebird;
+promisePlugin.Promise = bluebird
 
 /**
  * @class user
@@ -25,7 +24,6 @@ promisePlugin.Promise = bluebird;
 /**
  * @property {User} exports
  */
-module.exports = User;
 
 /**
  * @class User
@@ -35,7 +33,7 @@ module.exports = User;
  * @param {string} realmKeyId
  * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-function User(realmKeyId: string, inApiUrl: string) {
+export default function User(realmKeyId: string, inApiUrl: string) {
   if (!(this instanceof User)) {
     return new User(realmKeyId, inApiUrl);
   }
@@ -54,7 +52,7 @@ function User(realmKeyId: string, inApiUrl: string) {
       method: method
     };
     if (params) {
-      _.assign(req, params);
+      objectAssign(req, params);
     }
     return request.get(apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
   }
@@ -70,9 +68,9 @@ function User(realmKeyId: string, inApiUrl: string) {
     return rawCall('user.login_challenge', { realm_key_id: realmKeyId });
   }
 
-  _.assign(this, {
-    loginChallenge:    loginChallenge,
-    rawCall:           rawCall
+  objectAssign(this, {
+    loginChallenge: loginChallenge,
+    rawCall:        rawCall
   });
 
   Object.freeze(this);

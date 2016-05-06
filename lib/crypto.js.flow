@@ -1,23 +1,22 @@
 /* @flow */
-/*jshint boss:true */
 
-var crypto        = require('crypto')
-  , promisePlugin = require('superagent-promise-plugin')
-  , bluebird      = require('bluebird')
-  , request       = require('superagent')
-  , _             = require('lodash')
-;
-var promisify = bluebird.promisify;
+import * as crypto                        from 'crypto'
+import promisePlugin                      from 'superagent-promise-plugin'
+import { default as bluebird, promisify } from 'bluebird'
+import request                            from 'superagent'
+import objectAssign                       from 'object-assign'
 
-exports.sign           = sign;
-exports.checkSignature = checkSignature;
-exports.encodeTime     = encodeTime;
-exports.fromBase64     = fromBase64;
-exports.toBase64       = toBase64;
-exports.mkRequest      = mkRequest;
-exports.sendRequest    = sendRequest;
+export {
+  sign,
+  checkSignature,
+  encodeTime,
+  fromBase64,
+  toBase64,
+  mkRequest,
+  sendRequest,
+}
 
-promisePlugin.Promise = bluebird;
+promisePlugin.Promise = bluebird
 
 /**
  * @class crypto
@@ -71,7 +70,7 @@ function mkRequest(realmKeyId: string,
       method: method
     };
     if (params) {
-      _.assign(req, params);
+      objectAssign(req, params);
     }
     var encoded = toBase64(JSON.stringify(req));
     return sign(secret, encoded)

@@ -1,9 +1,9 @@
 /* @flow */
 
-var tozny    = require('./crypto')
-  , bluebird = require('bluebird')
-  , _        = require('lodash')
-;
+import * as tozny from './crypto'
+import bluebird   from 'bluebird'
+
+import type { User } from './types'
 
 /**
  * @class realm
@@ -238,7 +238,7 @@ export default class Realm {
    * @param {Array} [metadata]
    * @return {Promise.<Object>} The Tozny_API_User object if successful, otherwise false.
    */
-  userAdd(defer: string = "false", metadata: Object[]): Promise<Object> {
+  userAdd(defer: string = "false", metadata: Object[]): Promise<User|boolean> {
     const params = metadata
       ? { defer, extra_fields: tozny.toBase64(JSON.stringify(metadata)) }
       : { defer }
@@ -258,7 +258,7 @@ export default class Realm {
    * @param {string} userId User id to fetch
    * @return {Promise.<Object>} user_id, metadata
    */
-  userGet(userId: string): Promise<Object> {
+  userGet(userId: string): Promise<User> {
     return this.rawCall('realm.user_get', { user_id: userId }).then(function(resp) {
       if (resp.results) {
         return resp.results;
@@ -328,4 +328,5 @@ type UsersGetParams = {
   page?:           number,
 }
 
-type UsersGetResults = Object
+// Value is a map from user IDs to user values
+type UsersGetResults = { [key:string]: User }
