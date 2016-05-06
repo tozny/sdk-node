@@ -42,9 +42,7 @@ function sendRequest(apiUrl: string,
                      method: string,
                      params: Object): Promise<Object> {
   return mkRequest(realmKeyId, secret, method, params).then(function(req) {
-    return request.post(apiUrl).send(req);
-  }).then(function(resp) {
-    return JSON.parse(resp[1]);
+    return request.get(apiUrl).query(req).then(resp => resp.body)
   });
 }
 
