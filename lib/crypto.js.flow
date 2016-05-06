@@ -5,7 +5,6 @@ var crypto        = require('crypto')
   , promisePlugin = require('superagent-promise-plugin')
   , bluebird      = require('bluebird')
   , request       = require('superagent')
-  , toPromise     = require('stream-to-promise')
   , _             = require('lodash')
 ;
 var promisify = bluebird.promisify;
@@ -97,11 +96,10 @@ function mkRequest(realmKeyId: string,
  * @return {Promise.<string>} URL-safe base64-encoded signature
  */
 function sign(secret: string, message: Buffer|string): Promise<string> {
-  var hmac = crypto.createHmac('sha256', secret);
-  (hmac:any).end(message);  // typecast because Flow's node signatures are incomplete
-  return toPromise(hmac).then(function(signature) {
-    return toBase64(signature);
-  });
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(message);
+  const result = toBase64(hmac.digest());
+  return bluebird.resolve(result);
 }
 
 /**

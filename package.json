@@ -30,7 +30,6 @@
     "formidable": "^1.0.0",
     "lodash": "^4.0.0",
     "passport-strategy": "^1.0.0",
-    "stream-to-promise": "^1.1.0",
     "superagent": "^1.8.3",
     "superagent-promise-plugin": "^3.2.0"
   },
