@@ -7,6 +7,8 @@ import objectAssign  from 'object-assign'
 
 promisePlugin.Promise = bluebird
 
+import type { Realm } from './types'
+
 /**
  * @class user
  * @singleton
@@ -33,12 +35,15 @@ promisePlugin.Promise = bluebird
  * @param {string} realmKeyId
  * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-export default function User(realmKeyId: string, inApiUrl: string) {
+export default function User(realmKeyId: string, inApiUrl?: ?string) {
   if (!(this instanceof User)) {
     return new User(realmKeyId, inApiUrl);
   }
 
-  var apiUrl  = inApiUrl || process.env.API_URL;
+  const processApiUrl = typeof process !== 'undefined' && process.env
+    ? process.env.API_URL
+    : undefined
+  const apiUrl = inApiUrl || processApiUrl || 'https://api.tozny.com'
 
   /**
    * Used to make custom API calls.
@@ -68,9 +73,19 @@ export default function User(realmKeyId: string, inApiUrl: string) {
     return rawCall('user.login_challenge', { realm_key_id: realmKeyId });
   }
 
+  /**
+   * Fetches realm metadata
+   *
+   * @return {Promise.<Object>}
+   */
+  function realmGet(): Promise<Realm> {
+    return rawCall('user.realm_get')
+  }
+
   objectAssign(this, {
     loginChallenge: loginChallenge,
-    rawCall:        rawCall
+    realmGet:       realmGet,
+    rawCall:        rawCall,
   });
 
   Object.freeze(this);

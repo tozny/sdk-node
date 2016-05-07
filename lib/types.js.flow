@@ -1,3 +1,22 @@
+/**
+ * Type definitions for Flow type checking. Users of the SDK can import these
+ * type definitions like this:
+ *
+ *     import type { Realm, User } from 'tozny-auth/lib/types'
+ *
+ * @flow
+ */
+
+export type Realm = {
+  realm_id:        string,
+  logo_url:        string,
+  info_url:        string,
+  display_name:    string,
+  open_enrollment: boolean,
+  backup:          any,
+  extra_factor:    any,
+}
+
 export type User = {
   user_id:             string,
   blocked:             ?boolean,
