@@ -38,13 +38,18 @@ promisePlugin.Promise = bluebird
  * @param {Object} [params] Parameters to send with API call
  * @return {Promise.<Object>}
  */
-function sendRequest(apiUrl: string,
-                     realmKeyId: string,
-                     secret: string,
-                     method: string,
-                     params: Object): Promise<Object> {
+function sendRequest<T>(apiUrl: string,
+                        realmKeyId: string,
+                        secret: string,
+                        method: string,
+                        params: Object): Promise<T> {
   return mkRequest(realmKeyId, secret, method, params).then(function(req) {
-    return request.get(apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
+    return request
+      .post(apiUrl)
+      .type('form')
+      .send(req)
+      .use(promisePlugin)
+      .then(resp => resp.body);
   });
 }
 

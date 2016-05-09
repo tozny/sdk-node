@@ -62,7 +62,12 @@ export default class User {
     if (params) {
       objectAssign(req, params);
     }
-    return request.get(this.apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
+    return request
+      .post(this.apiUrl)
+      .type('form')
+      .send(req)
+      .use(promisePlugin)
+      .then(resp => resp.body)
   }
 
   /**
