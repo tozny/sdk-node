@@ -68,6 +68,7 @@ export default class User {
       .send(req)
       .use(promisePlugin)
       .then(resp => resp.body)
+      .then(data => (data && data.errors) ? bluebird.reject(data.errors) : data)
   }
 
   /**
