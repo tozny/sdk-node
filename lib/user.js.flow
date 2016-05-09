@@ -30,20 +30,23 @@ import type { Realm } from './types'
 /**
  * @class User
  * Provides methods for making API calls to Tozny on behalf of a user.
- *
- * @constructor
- * @param {string} realmKeyId
- * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
  */
-export default function User(realmKeyId: string, inApiUrl?: ?string) {
-  if (!(this instanceof User)) {
-    return new User(realmKeyId, inApiUrl);
-  }
+export default class User {
+  apiUrl: string;
+  realmKeyId: string;
 
-  const processApiUrl = typeof process !== 'undefined' && process.env
-    ? process.env.API_URL
-    : undefined
-  const apiUrl = inApiUrl || processApiUrl || 'https://api.tozny.com'
+  /**
+   * @constructor
+   * @param {string} realmKeyId
+   * @param {string} [inApiUrl=process.env.API_URL] URL of Tozny service
+   */
+  constructor(realmKeyId: string, inApiUrl?: ?string) {
+    const processApiUrl = typeof process !== 'undefined' && process.env
+      ? process.env.API_URL
+      : undefined
+    this.apiUrl = inApiUrl || processApiUrl || 'https://api.tozny.com'
+    this.realmKeyId = realmKeyId
+  }
 
   /**
    * Used to make custom API calls.
@@ -52,16 +55,15 @@ export default function User(realmKeyId: string, inApiUrl?: ?string) {
    * @param {Object} [params] Parameters to send.
    * @return {Promise.<Object>} Result depends on the API call that is made
    */
-  function rawCall(method, params) {
+  rawCall<T>(method: string, params: Object): Promise<T> {
     var req = {
       method: method
     };
     if (params) {
       objectAssign(req, params);
     }
-    return request.get(apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
+    return request.get(this.apiUrl).query(req).use(promisePlugin).then(resp => resp.body);
   }
-
 
   /**
    * Produces a login challenge, which can be transmitted to a Tozny-enabled
@@ -69,8 +71,8 @@ export default function User(realmKeyId: string, inApiUrl?: ?string) {
    *
    * @return {Promise.<{ signed_data: string, signature: string }>}
    */
-  function loginChallenge() {
-    return rawCall('user.login_challenge', { realm_key_id: realmKeyId });
+  loginChallenge(): Promise<{ signed_data: string, signature: string }> {
+    return this.rawCall('user.login_challenge', { realm_key_id: this.realmKeyId });
   }
 
   /**
@@ -78,15 +80,7 @@ export default function User(realmKeyId: string, inApiUrl?: ?string) {
    *
    * @return {Promise.<Object>}
    */
-  function realmGet(): Promise<Realm> {
-    return rawCall('user.realm_get')
+  realmGet(): Promise<Realm> {
+    return this.rawCall('user.realm_get', { realm_key_id: this.realmKeyId })
   }
-
-  objectAssign(this, {
-    loginChallenge: loginChallenge,
-    realmGet:       realmGet,
-    rawCall:        rawCall,
-  });
-
-  Object.freeze(this);
 }
