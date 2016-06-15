@@ -42,22 +42,19 @@ API Documentation
 
 This library includes detailed documentation for API functions,
 generated from source file comments.
-The documentation is built using [gulp][] and [jsduck][],
+The documentation is built using [jsduck][],
 which you will need to install.
 
-[gulp]: http://gulpjs.com/
 [jsduck]: https://github.com/senchalabs/jsduck
 
 Run the command:
 
-    gulp doc
+    npm run doc
 
 Then view the documentation by opening `doc/index.html`.
 
 Running the Tests
 -----------------
-
-Install [gulp][] (a build tool for NodeJS).
 
 Install project dependencies:
 
@@ -65,7 +62,7 @@ Install project dependencies:
 
 Then run the tests:
 
-    gulp test
+    npm test
 
 Some of the tests included run against a live Tozny instance.
 To run those tests, it is necessary to set environment variables with

@@ -5,9 +5,9 @@
     "Promise"
   ],
   "--": [
-    "realm.js",
-    "user.js",
-    "passport.js",
-    "lib/crypto.js"
+    "lib/crypto.js",
+    "lib/passport.js",
+    "lib/realm.js",
+    "lib/user.js"
   ]
 }
