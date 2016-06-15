@@ -1,6 +1,5 @@
-# Only *.js.flow files go into version control
-*.js
-*.js.map
+# lib/ is for generated files
+lib/
 
 # Logs
 logs
