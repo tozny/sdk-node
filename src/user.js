@@ -100,6 +100,18 @@ export default class User {
   }
 
   /**
+   * Validate a 6 or 8-digit OTP against a user session.
+   *
+   * @param {string} otp        OTP to validate
+   * @param {string} session_id ID of the session through which the OTP was created
+   * @returns {Promise.<Object>}
+   */
+  otpResult(otp: string, session_id: string): Promise<OTPResultResponse> {
+    const params = {otp, session_id}
+    return this.rawCall('user.otp_result', params);
+  }
+
+  /**
    * Send an email or SMS-based magic link challenge to a specific destination.
    *
    * @param {string}  destination The phone number or email address to use.
@@ -110,6 +122,17 @@ export default class User {
   linkChallenge(destination: string, endpoint: string, context?: ?string): Promise<OTPChallengeResponse> {
     const params = {destination, endpoint, context}
     return this.rawCall('user.link_challenge', params);
+  }
+
+  /**
+   * Validate an OTP embedded in a magic link.
+   *
+   * @param {string} otp OTP to validate
+   * @returns {Promise.<Object>}
+   */
+  linkResult(otp: string): Promise<OTPResultResponse> {
+    const params = {otp}
+    return this.rawCall('user.link_result', params);
   }
 
   /**
@@ -127,4 +150,9 @@ type OTPChallengeResponse = {
   session_id:   string,
   created_at:   number,
   presence:     string
+}
+
+type OTPResultResponse = {
+  signed_data: string,
+  signature:   string
 }
