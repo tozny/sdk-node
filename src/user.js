@@ -136,6 +136,32 @@ export default class User {
   }
 
   /**
+   * Exchange a signed OTP payload for an enrollment challenge.
+   *
+   * @param {string} signed_data Original OTP payload session
+   * @param {string} signature   Realm-signed signature of the payload
+   * @returns {Promise.<T>}
+   */
+  enrollmentChallengeExchange(signed_data: string, signature: string): Promise<EnrollmentChallengeResponse> {
+    const params = {signed_data, signature}
+    return this.rawCall('user.challenge_exchange', params);
+  }
+
+  /**
+   * Exchange a signed OTP payload for an authentication session.
+   *
+   * @param {string} signed_data  Original OTP payload session
+   * @param {string} signature    Realm-signed signature of the payload
+   * @param {string} [session_id] If provided, this authentication session will be completed
+   * @returns {Promise.<T>}
+   */
+  authenticationChallengeExchange(signed_data: string, signature: string,
+                                  session_id?: ?string): Promise<AuthenticationChallengeResponse> {
+    const params = {signed_data, signature, session_id}
+    return this.rawCall('user.challenge_exchange', params);
+  }
+
+  /**
    * Fetches realm metadata
    *
    * @return {Promise.<Object>}
@@ -153,6 +179,21 @@ type OTPChallengeResponse = {
 }
 
 type OTPResultResponse = {
+  signed_data: string,
+  signature:   string
+}
+
+type EnrollmentChallengeResponse = {
+  user_id:                  string,
+  temp_key:                 string,
+  secret_enrollment_url:    string,
+  secret_enrollment_qr_url: string,
+  key_id:                   string,
+  created:                  number,
+  status:                   number
+}
+
+type AuthenticationChallengeResponse = {
   signed_data: string,
   signature:   string
 }
