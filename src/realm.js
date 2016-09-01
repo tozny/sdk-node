@@ -194,12 +194,13 @@ export default class Realm {
    *
    * @param {string} [type]        One of "sms-otp-6," "sms-otp-8", or "email"
    * @param {string} [context]     One of “enroll,” “authenticate,” or “verify”.
-   * @param {string} [destination] The phone number or email address to use
-   * @param {string} [presence]    If defined, re-use a previously used format and destination
-   * @param {string} [data]        Serialized JSON object containing data to be added to the signed response on success
+   * @param {string} [destination] The phone number or email address to use.
+   * @param {string} [presence]    If defined, re-use a previously used format and destination.
+   * @param {string} [data]        Serialized JSON object containing data to be added to the signed response.
    * @returns {Promise.<Object>}
    */
-  otpChallenge(type?: ?string, context?: ?string, destination?: ?string, presence?: ?string, data?: ?string): Promise<OTPChallengeResponse> {
+  otpChallenge(type?: ?string, context?: ?string, destination?: ?string, presence?: ?string,
+               data?: ?string): Promise<OTPChallengeResponse> {
     const params = typeof presence !== 'undefined'
         ? {presence, data, context}
         : {type, destination, data, context}
@@ -209,12 +210,12 @@ export default class Realm {
   /**
    * Send an email or SMS-based magic link challenge to a specific destination.
    *
-   * @param {string}  destination The phone number or email address to use
+   * @param {string}  destination The phone number or email address to use.
    * @param {string}  endpoint    Base URL from which Tozny should generate the magic link.
    * @param {number}  [lifespan]  Number of seconds for which the link will be valid. Default is 300 (5 minutes).
    * @param {string}  [context]   One of “enroll,” “authenticate,” or “verify”.
    * @param {boolean} [send]      Flag whether to send the message (true) or return the magic link (false).
-   * @param {string}  [data]      Serialized JSON object containing data to be added to the signed response on success
+   * @param {string}  [data]      Serialized JSON object containing data to be added to the signed response.
    * @returns {Promise.<Object>}
    */
   linkChallenge(destination: string, endpoint: string, lifespan?: ?number, context?: ?string,

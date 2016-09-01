@@ -57,7 +57,8 @@ export default class User {
    */
   rawCall<T>(method: string, params: Object): Promise<T> {
     var req = {
-      method: method
+      method:       method,
+      realm_key_id: this.realmKeyId
     };
     if (params) {
       objectAssign(req, params);
@@ -78,7 +79,37 @@ export default class User {
    * @return {Promise.<{ signed_data: string, signature: string }>}
    */
   loginChallenge(): Promise<{ signed_data: string, signature: string }> {
-    return this.rawCall('user.login_challenge', { realm_key_id: this.realmKeyId });
+    return this.rawCall('user.login_challenge', {});
+  }
+
+  /**
+   * Produces an email or SMS-based one time challenge.
+   *
+   * @param {string} [type]        One of "sms-otp-6," "sms-otp-8", or "email"
+   * @param {string} [context]     One of “enroll,” “authenticate,” or “verify”.
+   * @param {string} [destination] The phone number or email address to use.
+   * @param {string} [presence]    If defined, re-use a previously used format and destination.
+   * @returns {Promise.<Object>}
+   */
+  otpChallenge(type?: ?string, context?: ?string, destination?: ?string,
+               presence?: ?string): Promise<OTPChallengeResponse> {
+    const params = typeof presence !== 'undefined'
+        ? {presence, context}
+        : {type, destination, context}
+    return this.rawCall('user.otp_challenge', params);
+  }
+
+  /**
+   * Send an email or SMS-based magic link challenge to a specific destination.
+   *
+   * @param {string}  destination The phone number or email address to use.
+   * @param {string}  endpoint    Base URL from which Tozny should generate the magic link.
+   * @param {string}  [context]   One of “enroll,” “authenticate,” or “verify”.
+   * @returns {Promise.<Object>}
+   */
+  linkChallenge(destination: string, endpoint: string, context?: ?string): Promise<OTPChallengeResponse> {
+    const params = {destination, endpoint, context}
+    return this.rawCall('user.link_challenge', params);
   }
 
   /**
@@ -87,6 +118,13 @@ export default class User {
    * @return {Promise.<Object>}
    */
   realmGet(): Promise<Realm> {
-    return this.rawCall('user.realm_get', { realm_key_id: this.realmKeyId })
+    return this.rawCall('user.realm_get', {})
   }
+}
+
+type OTPChallengeResponse = {
+  realm_key_id: string,
+  session_id:   string,
+  created_at:   number,
+  presence:     string
 }
