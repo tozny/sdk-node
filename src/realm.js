@@ -214,15 +214,15 @@ export default class Realm {
    * @param {string}  endpoint    Base URL from which Tozny should generate the magic link.
    * @param {number}  [lifespan]  Number of seconds for which the link will be valid. Default is 300 (5 minutes).
    * @param {string}  [context]   One of “enroll,” “authenticate,” or “verify”.
-   * @param {boolean} [send]      Flag whether to send the message (true) or return the magic link (false).
+   * @param {boolean} [sendNow]   Flag whether to send the message (true) or return the magic link (false).
    * @param {string}  [data]      Serialized JSON object containing data to be added to the signed response.
    * @returns {Promise.<Object>}
    */
   linkChallenge(destination: string, endpoint: string, lifespan?: ?number, context?: ?string,
-                send?: ?boolean, data?: ?string): Promise<OTPChallengeResponse> {
+                sendNow?: ?boolean, data?: ?string): Promise<OTPChallengeResponse> {
 
     // Convert the Boolean value to a yes/no literal
-    send = (typeof send === 'undefined' || !! send) ? 'yes' : 'no';
+    const send = (typeof sendNow === 'undefined' || !! sendNow) ? 'yes' : 'no';
 
     const params = {destination, endpoint, lifespan, context, send, data}
     return this.rawCall('realm.link_challenge', params);
