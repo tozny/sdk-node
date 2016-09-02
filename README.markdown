@@ -5,7 +5,7 @@ tozny
 
 [![NPM version](https://badge.fury.io/js/tozny-auth.png)](http://badge.fury.io/js/tozny-auth)
 [![Dependency Status](https://david-dm.org/tozny/sdk-node/status.svg)](https://david-dm.org/tozny/sdk-node)
-[![devDependency Status](https://david-dm.org/tozny-sdk-node/dev-status.svg)](https://david-dm.org/tozny/sdk-node#info=devDependencies)
+[![devDependency Status](https://david-dm.org/tozny/sdk-node/dev-status.svg)](https://david-dm.org/tozny/sdk-node#info=devDependencies)
 
 NodeJS SDK for with the [Tozny][] authentication service.
 Provides functions for making API calls to Tozny,
