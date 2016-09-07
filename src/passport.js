@@ -116,7 +116,7 @@ ToznyStrategy.prototype.authenticate = function authenticate(req, opts) {
   var self = this;
 
   promisify(form.parse.bind(form))(req).then(function (formData) {
-    var fields     = formData[0];
+    var fields     = formData;
     var signedData = fields[self._signed_data];
     var signature  = fields[self._signature];
 
