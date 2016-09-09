@@ -72,7 +72,7 @@ module.exports = ToznyStrategy;
  * a Tozny realm.
  *
  * @param {Realm} realm Tozny realm to authenticate under
- * @param {Object} [options]
+ * @param {Object} [opts]
  * @param {function({user_id: string}): Promise.<Object>|Object} [options.lookupUser]
  * Callback to map Tozny login data to an app-specific user record.
  * Passport will add a `user` property to authenticated requests - the value of
@@ -87,10 +87,12 @@ module.exports = ToznyStrategy;
  * If no callback is given, Passport will use the value produced by {@link
  * Realm#verifyLogin} (Which is also what is given as input to the callback).
  *
- * @param {string} [options.signedDataField="tozny_signed_data"] Name of POST
+ * @param {string} [opts.signedDataField="tozny_signed_data"] Name of POST
  * parameter that carries encoded login challenge
- * @param {string} [options.signatureField="tozny_signature"] Name of POST
+ * @param {string} [opts.signatureField="tozny_signature"] Name of POST
  * parameter that corries login challenge signature
+ * @param {boolean} [opts.passReqToCallback=true] Flag whether or not to pass
+ * the original request into the lookupUser callback
  */
 function ToznyStrategy(realm: Realm, opts: ToznyStrategyOptions) {
   opts = opts || {};
@@ -100,14 +102,16 @@ function ToznyStrategy(realm: Realm, opts: ToznyStrategyOptions) {
   this._signed_data = opts.signedDataField || 'tozny_signed_data';
   this._signature   = opts.signatureField  || 'tozny_signature';
   this._lookup      = opts.lookupUser;
+  this._passReqToCallback = opts.passReqToCallback;
 }
 
 util.inherits(ToznyStrategy, Strategy);
 
 export type ToznyStrategyOptions = {
-  lookupUser?:      (_: { user_id: string }) => (Promise<Object>|Object),
-  signedDataField?: string,
-  signatureField?:  string,
+  lookupUser?:        (_: { user_id: string }) => (Promise<Object>|Object),
+  passReqToCallback?: boolean,
+  signedDataField?:   string,
+  signatureField?:    string,
 }
 
 ToznyStrategy.prototype.authenticate = function authenticate(req, opts) {
@@ -129,7 +133,11 @@ ToznyStrategy.prototype.authenticate = function authenticate(req, opts) {
 
     function lookup(login) {
       if (self._lookup) {
-        return bluebird.resolve(self._lookup(login));
+        if (self._passReqToCallback) {
+          return bluebird.resolve(self._lookup(req, login));
+        } else {
+          return bluebird.resolve(self._lookup(login));
+        }
       }
       else {
         return login;
