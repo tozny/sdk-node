@@ -1,5 +1,7 @@
+# This repository and product is depreacted. Please use https://tozny.com/tozid/ and https://github.com/tozny/js-sdk
 tozny
 =====
+
 
 [![tozny-auth npm module](https://nodei.co/npm/tozny-auth.png?downloads=true&stars=true "tozny-auth npm module")](https://www.npmjs.com/package/tozny-auth)
 
